@@ -1,0 +1,80 @@
+name: Issue bot
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  updateDesignerMarketplace:
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.body, 'Paste or Upload below. They are meant for BOTS ONLY!!!')
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.RMG_BUILD_AND_RELEASE }}
+          fetch-depth: 0 # Fetch all to get authors of every template.
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm ci
+        working-directory: scripts
+
+      - name: Configure git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Save issue into a file
+        run: |
+          gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/railmapgen/rmp-gallery/issues/${{ github.event.issue.number }} > $HOME/issue.json
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Setup firefox
+        uses: browser-actions/setup-firefox@v1
+        with:
+          firefox-version: latest
+
+      - name: Install Noto CJK fonts
+        run: sudo apt install -y fonts-noto-cjk
+
+      - name: Make metadata and images
+        run: node --loader ts-node/esm ./issuebot.ts
+        working-directory: scripts
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          USER_LOGIN: ${{ github.event.issue.user.login }}
+          USER_ID: ${{ github.event.issue.user.id }}
+        id: bot
+
+      - name: Print diff and push
+        run: |
+          git --no-pager diff HEAD^ HEAD
+          git push --set-upstream origin bot-${{ github.event.issue.number }}
+
+      - name: pull-request-action
+        uses: vsoch/pull-request-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_PREFIX: "bot-"
+          PULL_REQUEST_FROM_BRANCH: bot-${{ github.event.issue.number }}
+          PULL_REQUEST_BRANCH: "main"
+          PULL_REQUEST_TOKEN: ${{ secrets.RMT_SVC }}
+          PULL_REQUEST_TITLE: ${{ github.event.issue.title }}
+          PULL_REQUEST_BODY: "Hi, I'm the rmp bot updating _${{ github.event.issue.title }}_ on behalf of @${{ github.event.issue.user.login }}.\nThis should fix #${{ github.event.issue.number }}"
+
+      - name: Add label
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const labelsToAdd = ['resources'];
+            await github.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: labelsToAdd
+            });

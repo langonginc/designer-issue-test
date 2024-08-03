@@ -1,0 +1,77 @@
+{
+    "color": "カラー",
+    "warning": "警告",
+    "cancel": "キャンセル",
+    "apply": "適用",
+    "remove": "削除",
+    "close": "閉じる",
+
+    "header": {
+        "about": {
+            "title": "RMP デザイナーについて",
+            "intro": "RMPマスターノードデザイナーで、RMPに任意のSVGを追加することができます。"
+        },
+        "import": {
+            "new": "新規",
+            "pasteSVG": "SVGを貼り付け",
+            "uploadParam": "プロジェクトをアップロード",
+            "uploadSVG": "SVGをアップロード"
+        },
+        "export": {
+            "preview": "プレビュー",
+            "showLines": "RMPラインを表示",
+            "showBadges": "RMPバッジを表示",
+            "offsetX": "オフセットX",
+            "offsetY": "オフセットY",
+            "scale": "スケール",
+            "rotate": "回転",
+            "export": "エクスポート",
+            "download": "ダウンロード"
+        },
+        "settings": {
+            "title": "設定",
+            "canvasBackground": {
+                "label": "キャンバス背景色",
+                "auto": "自動",
+                "white": "ライト",
+                "dark": "ダーク"
+            }
+        }
+    },
+    "panel": {
+        "tools": {
+            "showLess": "少なく表示"
+        },
+        "details": {
+            "header": "RMP詳細パネル"
+        },
+        "svgs": {
+            "title": "SVGコンポーネント",
+            "core": "接続可能",
+            "attrKey": "属性キー",
+            "attrValue": "属性値",
+            "addTextChildren": "テキストコンテンツを追加",
+            "attrMode": {
+                "title": "属性モード",
+                "value": "値",
+                "var": "変数",
+                "advanced": "高度"
+            },
+            "tipsA1": "右上隅をクリック",
+            "tipsA2": "して、SVGグラフィックをアップロードします",
+            "tipsB1": "左側のアイコンをクリック",
+            "tipsB2": "して、キャンバスをクリックしてSVGコンポーネントを追加します"
+        },
+        "components": {
+            "title": "変数",
+            "defaultValue": "デフォルト値",
+            "defaultColor": "デフォルト色",
+            "tips1": "クリックしてください",
+            "tips2": "変数を追加します。"
+        },
+        "common": {
+            "type": "タイプ",
+            "label": "ラベル"
+        }
+    }
+}
