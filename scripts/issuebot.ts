@@ -1,6 +1,3 @@
-import { execSync } from 'child_process';
-import { existsSync } from 'fs';
-import { mkdir, readFile, writeFile } from 'fs/promises';
 import { homedir } from 'os';
 import { resolve } from 'path';
 
@@ -56,3 +53,4 @@ export const main = async () => {
 
 // @ts-expect-error idk
 await main();
+
